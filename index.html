@@ -133,7 +133,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAL9GGrvA2p-suTm2GqA32YYIHmz8RvyaM",
@@ -162,6 +162,7 @@ function randomKey() {
     return `NOVA-${block2}-${block3}-P2077`;
 }
 
+// Device ID generate (agar naya device hai)
 function getOrCreateDeviceId() {
     let id = localStorage.getItem(DEVICE_STORAGE_KEY);
     if (id) return id;
@@ -173,7 +174,6 @@ function getOrCreateDeviceId() {
     return id;
 }
 
-// Auto generate function (Page load hote hi chalega)
 async function initKey() {
     const keyEl = document.getElementById("resKey");
     const deviceEl = document.getElementById("resDevice");
@@ -186,19 +186,17 @@ async function initKey() {
 
         let finalKey = "";
 
-        // Check if key saved
-        const savedKey = localStorage.getItem(KEY_STORAGE_KEY);
-        if (savedKey) {
-            const snapshot = await get(ref(db, `${USERS_NODE}/${savedKey}`));
-            if (snapshot.exists()) {
-                finalKey = savedKey; 
-            } else {
-                localStorage.removeItem(KEY_STORAGE_KEY);
-            }
-        }
+        // 1️⃣ Check Karein ki kya is Device ID ke liye Firebase me pehle se koi Key bani hai?
+        const deviceQuery = query(ref(db, USERS_NODE), orderByChild('deviceId'), equalTo(deviceId));
+        const querySnapshot = await get(deviceQuery);
 
-        // Generate new if needed
-        if (!finalKey) {
+        if (querySnapshot.exists()) {
+            // Agar is device ke naam pe pehle se key hai, toh WAHI key utha lo
+            querySnapshot.forEach((childSnapshot) => {
+                finalKey = childSnapshot.key;
+            });
+        } else {
+            // 2️⃣ Agar is device ki koi key nahi hai, toh Nayi Key banao
             finalKey = randomKey();
             const payload = {
                 username: "FreeUser_" + Math.floor(Math.random() * 10000),
@@ -216,7 +214,6 @@ async function initKey() {
                 createdAt: new Date().toISOString()
             };
             await set(ref(db, `${USERS_NODE}/${finalKey}`), payload);
-            localStorage.setItem(KEY_STORAGE_KEY, finalKey);
         }
 
         // Update UI
@@ -224,17 +221,28 @@ async function initKey() {
         keyEl.textContent = finalKey;
         btn.innerHTML = "📋 COPY KEY";
         btn.disabled = false;
+        
+        // LocalStorage me bhi save kar lo taaki agli baar direct load ho
+        localStorage.setItem(KEY_STORAGE_KEY, finalKey);
 
     } catch (err) {
         console.error(err);
         errorAlert.style.display = "block";
-        errorAlert.textContent = "Error: " + (err.message.includes("PERMISSION_DENIED") ? "Firebase Rules me write allow karein." : err.message);
+        
+        // Agar Firebase me Index on nahi hai, toh error aayega. Uske liye batana padega.
+        if (err.message.includes("Index not defined")) {
+             errorAlert.textContent = "Error: Firebase me 'deviceId' par indexing zaroori hai. Firebase Rules update karein.";
+        } else if (err.message.includes("PERMISSION_DENIED")) {
+             errorAlert.textContent = "Error: Firebase Rules me read/write allow karein.";
+        } else {
+             errorAlert.textContent = "Error: " + err.message;
+        }
+        
         keyEl.textContent = "ERROR";
         btn.innerHTML = "ERROR";
     }
 }
 
-// Call on load
 window.onload = initKey;
 
 window.copyKey = function() {
