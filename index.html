@@ -116,7 +116,7 @@
     </div>
     <div class="info-row">
       <span>Max Devices</span>
-      <span>1</span>
+      <span>2</span> <!-- Yahan 2 Device show hoga -->
     </div>
     <div class="info-row">
       <span>Timer Mode</span>
@@ -127,7 +127,7 @@
       <span class="loader"></span> WAIT...
     </button>
 
-    <div class="note">Device ID sirf verification ke liye hai — app isse device verify karega. Key sirf isi device pe activate hogi.</div>
+    <div class="note">Device ID sirf verification ke liye hai — app isse device verify karega. Key 2 devices pe activate ho sakti hai.</div>
   </div>
 </div>
 
@@ -203,7 +203,7 @@ async function initKey() {
                 status: "ACTIVE",
                 keyStatus: "ACTIVE",
                 validityMode: "duration",
-                maxDevices: 1,
+                maxDevices: 2, // 🔥 Yahan 2 kar diya gaya hai
                 devices: { [deviceId]: { addedAt: new Date().toISOString() } },
                 deviceId: deviceId,
                 durationValue: 24,
@@ -222,14 +222,12 @@ async function initKey() {
         btn.innerHTML = "📋 COPY KEY";
         btn.disabled = false;
         
-        // LocalStorage me bhi save kar lo taaki agli baar direct load ho
         localStorage.setItem(KEY_STORAGE_KEY, finalKey);
 
     } catch (err) {
         console.error(err);
         errorAlert.style.display = "block";
         
-        // Agar Firebase me Index on nahi hai, toh error aayega. Uske liye batana padega.
         if (err.message.includes("Index not defined")) {
              errorAlert.textContent = "Error: Firebase me 'deviceId' par indexing zaroori hai. Firebase Rules update karein.";
         } else if (err.message.includes("PERMISSION_DENIED")) {
