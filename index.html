@@ -1,83 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="dark">
 <head>
-  <title>Pro Key System</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#05070a" />
+<title>FIXAMODS • Your Key</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔑</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070a; --panel:rgba(255,255,255,.03); --border:rgba(255,255,255,.08);
+    --text:#eef2f7; --muted:#69708a; --accent:#00d68f; --accent-2:#22d3ee;
+    --green:#22c55e; --red:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+  body{
+    background:var(--bg); color:var(--text); min-height:100vh; display:flex;
+    align-items:center; justify-content:center; padding:20px; overflow-x:hidden;
+    background-image: radial-gradient(800px 500px at 10% 0%, rgba(0,214,143,.15), transparent 60%),
+                      radial-gradient(600px 400px at 90% 100%, rgba(34,211,238,.15), transparent 60%);
+  }
+  .container{ width:100%; max-width:440px; z-index:10; }
+  .logo{
+    width:80px; height:80px; border-radius:24px; margin:0 auto 20px;
+    display:grid; place-items:center; font-size:36px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow:0 8px 24px rgba(0,214,143,.3);
+  }
+  .title{
+    text-align:center; font-size:24px; font-weight:900; margin-bottom:8px;
+    background:linear-gradient(135deg, #fff 20%, var(--accent-2) 60%, var(--accent) 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .subtitle{
+    text-align:center; font-size:11px; color:var(--muted); letter-spacing:2px;
+    text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:24px;
+  }
+  .card{
+    padding:24px; border-radius:22px; background:var(--panel); border:1px solid var(--border);
+    backdrop-filter:blur(12px); box-shadow:0 12px 40px rgba(0,0,0,.5);
+  }
+  .key-box{
+    background:rgba(0,214,143,.1); border:1px solid rgba(0,214,143,.3);
+    padding:18px 14px; border-radius:12px; text-align:center; margin-bottom:14px;
+  }
+  .key-box .lbl{ font-size:9px; font-weight:800; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px;}
+  .key-text{
+    font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:900;
+    color:#fff; letter-spacing:1px; word-break:break-all;
+  }
+  .device-box{
+    background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.3);
+    padding:14px; border-radius:12px; text-align:center; margin-bottom:14px;
+  }
+  .device-box .lbl{ font-size:9px; font-weight:800; color:var(--accent-2); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px;}
+  .device-text{
+    font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:700;
+    color:#fff; letter-spacing:.5px; word-break:break-all;
+  }
+  .info-row{
+    display:flex; justify-content:space-between; font-size:11.5px;
+    padding:8px 0; border-bottom:1px solid var(--border);
+    font-family:'JetBrains Mono',monospace; text-align:left;
+  }
+  .info-row span:first-child{ color:var(--muted); }
+  .info-row span:last-child{ color:var(--text); font-weight:700; }
+  .info-row:last-of-type{ border-bottom:none; }
+  .btn-row{ display:flex; gap:10px; margin-top:16px; }
+  .copy-btn{
+    flex:1; padding:14px; border-radius:12px;
+    background:#0a0d12; border:1px solid var(--border); color:var(--text);
+    font-weight:800; font-size:12px; cursor:pointer; transition:.2s;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .copy-btn:hover{ background:var(--border); }
+  .primary-btn{
+    width:100%; padding:14px; border-radius:12px; border:none; cursor:pointer;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    color:#02150f; font-weight:900; font-size:12px; letter-spacing:.5px;
+    text-transform:uppercase; font-family:'JetBrains Mono',monospace;
+    transition:.2s; box-shadow:0 4px 16px rgba(0,214,143,.3); margin-top:10px;
+  }
+  .primary-btn:hover{ opacity:.95; }
+  .note{
+    margin-top:14px; font-size:11px; color:var(--muted); text-align:center; line-height:1.5;
+  }
+</style>
 </head>
+<body>
 
-<body style="text-align:center; background:black; color:white;">
+<div class="container">
+  <div class="logo">🔑</div>
+  <div class="title">Your License Key</div>
+  <div class="subtitle">FIXAMODS Premium Access</div>
+  
+  <div class="card">
+    <div class="key-box">
+      <div class="lbl">YOUR WORKING KEY</div>
+      <div class="key-text" id="resKey">---</div>
+    </div>
 
-<h1>GET YOUR KEY</h1>
+    <div class="device-box">
+      <div class="lbl">YOUR DEVICE ID</div>
+      <div class="device-text" id="resDevice">---</div>
+    </div>
+    
+    <div class="info-row">
+      <span>Duration</span>
+      <span id="resDuration">---</span>
+    </div>
+    <div class="info-row">
+      <span>Max Devices</span>
+      <span id="resDevices">1</span>
+    </div>
+    <div class="info-row">
+      <span>Timer Mode</span>
+      <span style="color:var(--green)">Starts on First Login</span>
+    </div>
 
-<button onclick="getLink()">Get Key</button>
+    <div class="btn-row">
+      <button class="copy-btn" onclick="copyText('key')">📋 COPY KEY</button>
+      <button class="copy-btn" onclick="copyText('device')">📱 COPY ID</button>
+    </div>
+    <button class="primary-btn" onclick="copyText('both')">📋 COPY KEY + DEVICE ID</button>
 
-<p id="status"></p>
-
-<div id="keyBox" style="display:none;">
-  <h2>Your Key:</h2>
-  <p id="key"></p>
+    <div class="note">Ye device ID app me enter karein. Key sirf isi device pe activate hogi.</div>
+  </div>
 </div>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const key = params.get("key") || "NOVA-XXXX-0000-P2077";
+const device = params.get("device") || "FIXA-XXXX-XXXX-XXXX";
+const duration = params.get("duration") || "24 hours";
+const devices = params.get("devices") || "1";
 
-let apiToken = "83bdbdcd334319be55c53b1ec5f8b41e5fa8005e";
+document.getElementById("resKey").textContent = key;
+document.getElementById("resDevice").textContent = device;
+document.getElementById("resDuration").textContent = duration;
+document.getElementById("resDevices").textContent = devices;
 
-// 🔗 FINAL URL (user short link ke baad yaha aayega)
-let finalUrl = "https://getkey.page.gd/index.html";
+function copyText(type) {
+    let text = "";
+    if (type === "key") text = key;
+    else if (type === "device") text = device;
+    else text = `Key: ${key}\nDevice ID: ${device}`;
 
-// 🔑 SERVER LINK
-let serverLink = "https://getkey.page.gd/generate.php";
-
-function getLink() {
-
-  document.getElementById("status").innerText = "Generating Link...";
-
-  fetch(`https://shrinkme.io/api?api=${apiToken}&url=${finalUrl}`)
-  .then(res => res.json())
-  .then(data => {
-
-    let shortLink = data.shortenedUrl;
-
-    // open short link
-    window.open(shortLink, "_blank");
-
-    startTimer();
-
-  })
-  .catch(() => {
-    document.getElementById("status").innerText = "Error generating link ❌";
-  });
-
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e) {}
+    document.body.removeChild(ta);
+    if (ok) alert("✅ Copied!");
+    else alert("Copy failed. Manually copy karein.");
 }
-
-function startTimer() {
-
-  let timeLeft = 15;
-
-  let timer = setInterval(() => {
-
-    document.getElementById("status").innerText =
-      "Complete link to get key... " + timeLeft;
-
-    timeLeft--;
-
-    if (timeLeft < 0) {
-      clearInterval(timer);
-
-      fetch(serverLink)
-      .then(res => res.text())
-      .then(key => {
-        document.getElementById("key").innerText = key;
-        document.getElementById("keyBox").style.display = "block";
-        document.getElementById("status").innerText = "Key Generated ✅";
-      });
-
-    }
-
-  }, 1000);
-
-}
-
 </script>
-
 </body>
 </html>
