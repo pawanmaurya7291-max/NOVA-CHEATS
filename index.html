@@ -112,11 +112,11 @@
     
     <div class="info-row">
       <span>Duration</span>
-      <span>24 hours</span>
+      <span>4 hours</span>
     </div>
     <div class="info-row">
       <span>Max Devices</span>
-      <span>2</span> <!-- Yahan 2 Device show hoga -->
+      <span>1</span>
     </div>
     <div class="info-row">
       <span>Timer Mode</span>
@@ -127,7 +127,7 @@
       <span class="loader"></span> WAIT...
     </button>
 
-    <div class="note">Device ID sirf verification ke liye hai — app isse device verify karega. Key 2 devices pe activate ho sakti hai.</div>
+    <div class="note">Device ID sirf verification ke liye hai — app isse device verify karega. Key 1 device pe activate ho sakti hai.</div>
   </div>
 </div>
 
@@ -162,7 +162,6 @@ function randomKey() {
     return `NOVA-${block2}-${block3}-P2077`;
 }
 
-// Device ID generate (agar naya device hai)
 function getOrCreateDeviceId() {
     let id = localStorage.getItem(DEVICE_STORAGE_KEY);
     if (id) return id;
@@ -198,15 +197,17 @@ async function initKey() {
         } else {
             // 2️⃣ Agar is device ki koi key nahi hai, toh Nayi Key banao
             finalKey = randomKey();
+            
+            // 🔥 Yahan devices: {} khali chhod diya gaya hai taaki koi device auto-register na ho
             const payload = {
                 username: "FreeUser_" + Math.floor(Math.random() * 10000),
                 status: "ACTIVE",
                 keyStatus: "ACTIVE",
                 validityMode: "duration",
-                maxDevices: 2, // 🔥 Yahan 2 kar diya gaya hai
-                devices: { [deviceId]: { addedAt: new Date().toISOString() } },
-                deviceId: deviceId,
-                durationValue: 24,
+                maxDevices: 1,          // 🔥 1 Device only
+                deviceId: deviceId, 
+                devices: {},            // 🔥 Koi device register nahi hoga yahan
+                durationValue: 4,       // 🔥 4 Hours
                 durationUnit: "hours",
                 validity: "",
                 firstLogin: "",
